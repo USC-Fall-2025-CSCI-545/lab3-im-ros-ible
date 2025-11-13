@@ -163,6 +163,11 @@ class AdaRRT():
         """
         direction = sample - neighbor.state
         distance = np.linalg.norm(direction)
+        
+        # if divide by 0
+        if distance == 0:
+            return None
+            
         direction = direction / distance
 
         new_state = neighbor.state + self.step_size * direction
