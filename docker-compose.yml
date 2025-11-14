@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  lab3:
+    image: cs545-lab3-melodic-arm64:latest # The image we tagged
+    container_name: cs545_lab3
+    stdin_open: true
+    tty: true
+    network_mode: host
+
+    environment:
+      - DISPLAY=$DISPLAY
+
+    volumes:
+      # Mounts the X11 socket for Rviz
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw 
+
+      # ----------------------------------------------------------------
+      # FINAL CORRECT PATH:
+      # Mounts your script from its real location into the
+      # location the container expects.
+      # ----------------------------------------------------------------
+      - ./adarrt/src/adarrt.py:/root/ros_ws/src/lab3/adarrt.py
+
+    command: tail -f /dev/null
