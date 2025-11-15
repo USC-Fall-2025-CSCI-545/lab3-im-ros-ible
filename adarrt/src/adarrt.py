@@ -105,7 +105,10 @@ class AdaRRT():
             goal on success. On failure, returns None.
         """
         for k in range(self.max_iter):
-            q_rand = self._get_random_sample()
+            if np.random.random() < 0.2:
+                q_rand = self._get_random_sample_near_goal()
+            else:
+                q_rand = self._get_random_sample()
             q_near = self._get_nearest_neighbor(q_rand)
             new_node = self._extend_sample(q_rand, q_near)
 
@@ -131,6 +134,15 @@ class AdaRRT():
         """
         return np.random.uniform(self.joint_lower_limits, self.joint_upper_limits)
 
+    def _get_random_sample_near_goal(self):
+
+        low_bound = self.goal.state - 0.05
+        high_bound = self.goal.state + 0.05
+    
+        low_bound = np.maximum(low_bound, self.joint_lower_limits)
+        high_bound = np.minimum(high_bound, self.joint_upper_limits)
+
+        return np.random.uniform(low_bound, high_bound)
     def _get_nearest_neighbor(self, sample):
         """
         Finds the closest node to the given sample in the search space,
@@ -235,7 +247,7 @@ def main(is_sim):
     armHome = [-1.5, 3.22, 1.23, -2.19, 1.8, 1.2]
     goalConfig = [-1.72, 4.44, 2.02, -2.04, 2.66, 1.39]
     delta = 0.25
-    eps = 1.0
+    eps = 0.2
 
     if is_sim:
         ada.set_positions(goalConfig)
@@ -304,3 +316,4 @@ if __name__ == '__main__':
     parser.set_defaults(is_sim=True)
     args = parser.parse_args()
     main(args.is_sim)
+
