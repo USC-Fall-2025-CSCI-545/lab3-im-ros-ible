@@ -143,6 +143,7 @@ class AdaRRT():
         high_bound = np.minimum(high_bound, self.joint_upper_limits)
 
         return np.random.uniform(low_bound, high_bound)
+
     def _get_nearest_neighbor(self, sample):
         """
         Finds the closest node to the given sample in the search space,
@@ -176,7 +177,7 @@ class AdaRRT():
         direction = sample - neighbor.state
         distance = np.linalg.norm(direction)
         
-        # if divide by 0
+        # if sample configuration already exists in tree
         if distance == 0:
             return None
             
